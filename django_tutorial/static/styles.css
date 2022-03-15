@@ -1,3 +1,32 @@
 body {
-    color:blue;
+    background-color: lightskyblue;
 }
+.main {
+    background-color: darksalmon;
+    width: 60%;
+    margin: 0 auto;
+}
+.review {
+    background-color: burlywood;
+    text-align: center;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
