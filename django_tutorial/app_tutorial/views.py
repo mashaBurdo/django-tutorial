@@ -1,7 +1,18 @@
 from django.http import HttpResponse
 from django.shortcuts import render
-
+from .forms import BookForm
 from .models import Book, Review
+
+
+def add_book(request):
+    if request.method == 'POST':
+        form = BookForm(request.POST)
+        if form.is_valid():
+            Book.objects.create(**form.cleaned_data)
+            return HttpResponse("DONE") # TODO: придумайте что-то нормальное
+    else:
+        form = BookForm()
+        return render(request, 'book_form.html', {'form': form})
 
 
 def index(request):
