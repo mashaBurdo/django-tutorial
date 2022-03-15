@@ -13,6 +13,11 @@ def book_detail(request, book_id):
     return render(request, 'book_detail.html', {'book': book})
 
 
+def book_list(request):
+    books = Book.objects.all()
+    return render(request, 'book_list.html', {'books': books})
+
+
 def review_detail(request, review_id):
     review = Review.objects.get(id=review_id)
     return render(request, 'review_detail.html', {'review': review})
