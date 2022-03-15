@@ -21,3 +21,12 @@ def book_list(request):
 def review_detail(request, review_id):
     review = Review.objects.get(id=review_id)
     return render(request, 'review_detail.html', {'review': review})
+
+def review_list(request):
+    reviews = Review.objects.all()
+    return render(request, 'review_list.html', {'reviews': reviews})
+
+
+def book_review_list(request, book_id):
+    reviews = Review.objects.filter(book=book_id)
+    return render(request, 'review_list.html', {'reviews': reviews})

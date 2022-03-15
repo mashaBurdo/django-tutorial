@@ -42,8 +42,9 @@ ROOT_URLCONF = 'django_tutorial.urls'
 
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 
-# STATIC_URL = '/static/'
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
