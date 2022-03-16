@@ -1,20 +1,32 @@
 body {
-    background-color: lightskyblue;
+    /*background-color: lightskyblue;*/
 }
 .main {
-    background-color: darksalmon;
+    /*background-color: darksalmon;*/
     width: 60%;
     margin: 0 auto;
 }
 .review {
-    background-color: burlywood;
+    /*background-color: burlywood;*/
     text-align: center;
     padding: 10px;
     margin-bottom: 10px;
 }
+textarea {
+    height: 80px;
+}
+.book-form input, .book-form textarea{
+    /*background-color: gold;*/
+    margin: 10px auto;
+    display: block;
+    width: 80%;
 
-
-
+}
+.book-form label {
+    width: 80%;
+    margin: 0 auto;
+    display:block;
+}
 
 
 
