@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .forms import BookForm
 from .models import Book, Review
 
@@ -9,7 +9,7 @@ def add_book(request):
         form = BookForm(request.POST)
         if form.is_valid():
             Book.objects.create(**form.cleaned_data)
-            return HttpResponse("DONE") # TODO: придумайте что-то нормальное
+            return redirect('book_list')
     else:
         form = BookForm()
         return render(request, 'book_form.html', {'form': form})
