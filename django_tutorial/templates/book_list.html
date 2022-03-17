@@ -9,6 +9,9 @@
         <li class="list-group-item">Name: {{book.name}}</li>
         <li class="list-group-item">Description: {{book.description}}</li>
         <li class="list-group-item">Pages number: {{book.pages_number}}</li>
+        <li class="list-group-item">
+            <a class="btn btn-dark" href="{% url 'book_review_list' book_id=book.id%}" role="button">Reviews</a>
+        </li>
       </ul>
     </div>
 {% endfor %}
