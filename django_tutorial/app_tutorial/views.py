@@ -1,8 +1,9 @@
 from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from .forms import BookForm, LoginForm, RegisterForm
+from .forms import BookForm, ReviewForm, LoginForm, RegisterForm
 from .models import Book, Review
 
 
@@ -14,7 +15,21 @@ def add_book(request):
             return redirect('book_detail', book.id)
     else:
         form = BookForm()
-        return render(request, 'book_form.html', {'form': form})
+        return render(request, 'form.html', {'form': form})
+
+
+@login_required
+def add_review(request, book_id):
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            user = request.user
+            book = Book.objects.get(id=book_id)
+            Review.objects.create(book=book, user=user, **form.cleaned_data)
+            return redirect('book_review_list', book.id)
+    else:
+        form = ReviewForm()
+        return render(request, 'form.html', {'form': form})
 
 
 def index(request):
@@ -55,19 +70,19 @@ def login_user(request):
             if user is not None:
                 if user.is_active:
                     login(request, user)
-                    return HttpResponse('Authenticated successfully')
+                    return redirect("index")
                 else:
                     return HttpResponse('Disabled account')
             else:
                 return HttpResponse('Invalid login')
     else:
         form = LoginForm()
-    return render(request, 'login_form.html', {'form': form})
+    return render(request, 'form.html', {'form': form})
 
 
 def logout_user(request):
     logout(request)
-    return HttpResponse('Logged out')
+    return redirect("index")
 
 
 def register_user(request):
@@ -77,9 +92,8 @@ def register_user(request):
             User.objects.create_user(**form.cleaned_data)
             return redirect("login_user")
         else:
-            print(form.errors)
-        return HttpResponse('Invalid registration')
+            return HttpResponse('Invalid registration')
     else:
         form = RegisterForm()
 
-        return render(request, "register_form.html", {"form": form})
+        return render(request, "form.html", {"form": form})
