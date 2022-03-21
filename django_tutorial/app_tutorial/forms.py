@@ -8,6 +8,10 @@ class BookForm(forms.Form):
     description = forms.CharField(label="Description", widget=forms.Textarea)
 
 
+class EditBookDescriptionForm(forms.Form):
+   description = forms.CharField(label="Description", widget=forms.Textarea)
+
+
 class ReviewForm(forms.Form):
     text = forms.CharField(label="Text", widget=forms.Textarea)
 

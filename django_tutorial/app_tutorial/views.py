@@ -2,11 +2,12 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
-from .forms import BookForm, ReviewForm, LoginForm, RegisterForm
+from django.shortcuts import render, redirect, get_object_or_404
+from .forms import BookForm, EditBookDescriptionForm, ReviewForm, LoginForm, RegisterForm
 from .models import Book, Review
 
 
+@login_required
 def add_book(request):
     if request.method == 'POST':
         form = BookForm(request.POST)
@@ -19,14 +20,55 @@ def add_book(request):
 
 
 @login_required
+def edit_book(request, book_id):
+    if request.method == 'POST':
+        form = EditBookDescriptionForm(request.POST)
+        if form.is_valid():
+            book = get_object_or_404(Book, pk=book_id)
+            book.description = form.cleaned_data["description"]
+            book.save()
+            return redirect('book_detail', book.id)
+    else:
+        form = EditBookDescriptionForm()
+        return render(request, 'form.html', {'form': form})
+
+
+@login_required
 def add_review(request, book_id):
     if request.method == 'POST':
         form = ReviewForm(request.POST)
         if form.is_valid():
             user = request.user
-            book = Book.objects.get(id=book_id)
+            book = get_object_or_404(Book, pk=book_id)
             Review.objects.create(book=book, user=user, **form.cleaned_data)
             return redirect('book_review_list', book.id)
+    else:
+        form = ReviewForm()
+        return render(request, 'form.html', {'form': form})
+
+
+@login_required
+def delete_review(request, review_id):
+    review = get_object_or_404(Review, pk=review_id)
+    user = request.user
+    if review.user == user:
+        review.delete()
+        return redirect('book_review_list', review.book.id)
+    return HttpResponse('You can delete only your reviews!')
+
+
+@login_required
+def edit_review(request, review_id):
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            user = request.user
+            review = get_object_or_404(Review, pk=review_id)
+            if review.user == user:
+                review.text = form.cleaned_data["text"]
+                review.save()
+                return redirect('book_review_list', review.book.id)
+            return HttpResponse('You can edit only your reviews!')
     else:
         form = ReviewForm()
         return render(request, 'form.html', {'form': form})
@@ -37,7 +79,7 @@ def index(request):
 
 
 def book_detail(request, book_id):
-    book = Book.objects.get(id=book_id)
+    book = get_object_or_404(Book, pk=book_id)
     return render(request, 'book_detail.html', {'book': book})
 
 
@@ -47,7 +89,7 @@ def book_list(request):
 
 
 def review_detail(request, review_id):
-    review = Review.objects.get(id=review_id)
+    review = get_object_or_404(Review, id=review_id)
     return render(request, 'review_detail.html', {'review': review})
 
 
